@@ -44,6 +44,40 @@ button{font:inherit;color:inherit;cursor:pointer}
 details{margin:8px 0}summary{cursor:pointer;font-weight:600}
 .rv{border-top:1px solid var(--bd);padding:10px 0}.ok{color:var(--ok)}.no{color:var(--bad)}
 .rv .vis{font-size:1rem}.rv svg{width:44px;height:44px}
+</style>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--tx:#101828;--mu:#5b6578;--ac:#2f4bff;--on:#fff;--ok:#12803c;--bad:#c0262d;--bd:#d8deea;--hi:#ffb400;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1220;--card:#151c2e;--tx:#eef1fb;--mu:#9aa5bf;--ac:#7d93ff;--on:#0d1220;--ok:#4ade80;--bad:#ff7b81;--bd:#26304a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d1220;--card:#151c2e;--tx:#eef1fb;--mu:#9aa5bf;--ac:#7d93ff;--on:#0d1220;--ok:#4ade80;--bad:#ff7b81;--bd:#26304a;color-scheme:dark}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 "Avenir Next","Segoe UI",system-ui,sans-serif}
+#app{max-width:560px;margin:0 auto;padding:16px}
+h1{font-size:2.2rem;line-height:1.1;margin:.3em 0 .4em;letter-spacing:-.02em}
+h2{font-size:1.25rem;line-height:1.3;margin:.3em 0 .6em}
+p{margin:.4em 0}.mu{color:var(--mu)}small{color:var(--mu)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:18px;margin:12px 0}
+button{font:inherit;color:inherit;cursor:pointer}
+.btn{background:var(--ac);color:var(--on);border:0;border-radius:10px;padding:12px 18px;font-weight:600;width:100%}
+.btn.alt{background:transparent;color:var(--tx);border:1px solid var(--bd)}
+.row{display:flex;gap:8px;margin:10px 0}.row>*{flex:1}
+.top{display:flex;justify-content:space-between;align-items:center;font-weight:600}
+.bar{height:6px;background:var(--bd);border-radius:3px;margin:8px 0}.bar i{display:block;height:100%;background:var(--ac);border-radius:3px}
+.vis{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0 14px;font-size:1.5rem;font-weight:700;letter-spacing:.02em}
+.vis svg,.opt svg{border:1px solid var(--bd);border-radius:10px;padding:4px;background:var(--bg);color:var(--tx)}
+.qm{font-size:2rem;color:var(--ac)}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;background:var(--bg);border:2px solid var(--bd);border-radius:10px;padding:12px}
+.opt.sel{border-color:var(--ac);background:color-mix(in srgb,var(--ac) 12%,var(--card))}
+.pat .opts{grid-template-columns:1fr 1fr}.pat .opt{display:flex;justify-content:center}
+.dots{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0}
+.dots button{width:28px;height:28px;border-radius:50%;border:1px solid var(--bd);background:var(--card);font-size:.75rem;padding:0}
+.dots .a{background:var(--ac);color:var(--on);border-color:var(--ac)}.dots .f{border:2px solid var(--hi)}.dots .c{outline:2px solid var(--tx);outline-offset:1px}
+.score{text-align:center}.score .n{font-size:4.5rem;font-weight:800;line-height:1;letter-spacing:-.03em}
+.dm{display:grid;grid-template-columns:90px 1fr 40px;gap:8px;align-items:center;margin:8px 0;font-size:.95rem}
+.dm .bar{margin:0;height:10px}.dm .bar i{background:var(--hi)}
+details{margin:8px 0}summary{cursor:pointer;font-weight:600}
+.rv{border-top:1px solid var(--bd);padding:10px 0}.ok{color:var(--ok)}.no{color:var(--bad)}
+.rv .vis{font-size:1rem}.rv svg{width:44px;height:44px}
 </style></head><body><div id="app"></div>
 <script>
 const $=s=>document.querySelector(s),R=(a,b)=>Math.floor(Math.random()*(b-a+1))+a,
@@ -54,8 +88,15 @@ let S=null,timer=null,AG=-1;
 function hist(){try{return JSON.parse(localStorage.getItem("bg_h")||"[]")}catch(e){return[]}}
 function saveH(h){try{localStorage.setItem("bg_h",JSON.stringify(h.slice(-10)))}catch(e){}}
 /* Numerical generator */
-function numOpts(ans){const s=new Set([ans]);while(s.size<4)s.add(ans+pk([-1,1])*R(1,6));const o=sh([...s]);return{o:o.map(String),a:o.indexOf(ans)}}
-function genNum(l){let t,e,a,b,d;
+function numOpts(ans){const s=new Set([ans]);while(s.size<4){const v=ans+pk([-1,1])*R(1,6);if(v>0)s.add(v)}const o=sh([...s]);return{o:o.map(String),a:o.indexOf(ans)}}
+function genNum(l,t){const A=t>0;let s,e,a,b,x,y;
+const V=[[()=>{a=R(1,A?20:10);x=pk(A?[2,3,4,5,6,7,9]:[1,2,3,5,10]);s=[0,1,2,3,4,5].map(i=>a+i*x);e='Each number adds '+x+'.'},()=>{x=pk(A?[2,3,4,5]:[1,2,3]);a=R(5,9)*x+5*x;s=[0,1,2,3,4,5].map(i=>a-i*x);e='Each number goes down by '+x+'.'}],
+[()=>{a=R(1,3);x=A?pk([2,3]):2;s=[0,1,2,3,4,5].map(i=>a*x**i);e='Each number is multiplied by '+x+'.'},()=>{a=R(10,30);x=R(2,A?9:4);y=R(1,x-1);s=[a];for(let i=0;i<5;i++)s.push(s[i]+(i%2?-y:x));e='The numbers go up '+x+', then down '+y+', repeating.'}],
+[()=>{a=R(1,9);x=R(1,3);s=[a];for(let i=0;i<5;i++)s.push(s[i]+x+i);e='The gap grows by 1 each step (+'+x+', +'+(x+1)+', +'+(x+2)+' …).'},()=>{a=R(1,6);s=[0,1,2,3,4,5].map(i=>(a+i)**2);e='These are square numbers: '+a+'², '+(a+1)+'², '+(a+2)+'² …'}],
+[()=>{a=R(2,9);b=R(30,60);x=R(2,5);y=R(2,6);s=[];for(let i=0;i<3;i++)s.push(a+i*x,b-i*y);e='Two series are interleaved: one adds '+x+', the other subtracts '+y+'.'},()=>{a=R(1,4);y=R(1,3);s=[a];for(let i=0;i<5;i++)s.push(s[i]*2+y);e='Each number is double the last, plus '+y+'.'}],
+[()=>{a=R(1,4);b=R(2,5);s=[a,b];for(let i=2;i<6;i++)s.push(s[i-1]+s[i-2]);e='Each number is the sum of the two before it.'},()=>{a=R(1,5);s=[0,1,2,3,4,5].map(i=>(a+i)*(a+i+1));e='Each is two consecutive numbers multiplied: '+a+'×'+(a+1)+', '+(a+1)+'×'+(a+2)+' …'}]];
+pk(A||l<3?V[l-1]:V[l-1].slice(0,1))();const o=numOpts(s[5]);return{d:0,l,q:'What number comes next?',v:s.slice(0,5).join(', ')+', <span class=qm>?</span>',o:o.o,a:o.a,e}}
+function genNumOld(l){let t,e,a,b,d;
  if(l==1){a=R(1,20);d=R(2,9);t=[0,1,2,3,4,5].map(i=>a+i*d);e="Each number adds "+d+".";}
  else if(l==2){a=R(1,4);d=R(2,3);t=[0,1,2,3,4,5].map(i=>a*d**i);e="Each number is multiplied by "+d+".";}
  else if(l==3){a=R(1,9);d=R(1,3);t=[a];for(let i=0;i<5;i++)t.push(t[i]+d+i);e="The gap grows by 1 each step (+"+d+", +"+(d+1)+", +"+(d+2)+" …).";}
@@ -64,7 +105,7 @@ function genNum(l){let t,e,a,b,d;
  const o=numOpts(t[5]);return{d:0,l,q:"What number comes next?",v:t.slice(0,5).join(", ")+", <span class=qm>?</span>",o:o.o,a:o.a,e}}
 /* Pattern generator */
 const cell=(a,n)=>{let c="";for(let i=0;i<n;i++)c+=`<circle cx="${40-(n-1)*8+i*16}" cy="68" r="4" fill="currentColor"/>`;return `<svg viewBox="0 0 80 80" width="56" height="56"><g transform="rotate(${a} 40 34)"><path d="M40 12v44M40 12l-10 12M40 12l10 12" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>${c}</svg>`};
-function genPat(l){const s=pk([45,90]),st=[];let a=R(0,7)*45,n=R(1,3);
+function genPat(l,t){const s=t?pk([45,90]):90,st=[];let a=R(0,7)*45,n=R(1,3);
  for(let i=0;i<5;i++){st.push([((a%360)+360)%360,n]);
   if(l==1)a+=s;else if(l==2)n=n%4+1;else if(l==3){a+=s;n=n%4+1}else if(l==4)a+=i%2?2*s:s;else{a+=s*(i+1);n=n%4+1}}
  const e=["","The arrow turns "+s+"° each step.","The dots go up by 1 each step (back to 1 after 4).","The arrow turns "+s+"° and the dots go up by 1 each step.","The arrow turns "+s+"°, then "+2*s+"°, alternately.","The arrow’s turn grows each step ("+s+"°, "+2*s+"°, …) while the dots cycle 1–4."][l];
@@ -72,7 +113,7 @@ function genPat(l){const s=pk([45,90]),st=[];let a=R(0,7)*45,n=R(1,3);
  while(op.length<4){const c=[(ans[0]+pk([-90,-45,45,90,135])+360)%360,Math.max(1,Math.min(4,ans[1]+pk([-1,0,0,1])))];if(!seen.has(c.join())){seen.add(c.join());op.push(c)}}
  const o=sh(op);return{d:3,l,q:"Which figure comes next in the sequence?",v:st.slice(0,4).map(x=>cell(x[0],x[1])).join("")+"<span class=qm>?</span>",o:o.map(x=>cell(x[0],x[1])),a:o.indexOf(ans),e,pat:1}}
 /* Static banks: [level, question, [correct first, ...wrong], explanation] */
-const VER=[
+const VER0=[
 [1,"Hot is to cold as up is to …",["down","high","warm","top"],"Opposites."],
 [1,"Which word means the same as “big”?",["Large","Tiny","Thin","Quiet"],"Large is a synonym of big."],
 [2,"Book is to reading as fork is to …",["eating","cooking","spoon","kitchen"],"Each tool is paired with its use."],
@@ -83,7 +124,7 @@ const VER=[
 [4,"Prologue is to epilogue as overture is to …",["finale","orchestra","opera","melody"],"Each pair is a beginning and its matching ending."],
 [5,"“Ephemeral” most nearly means …",["short-lived","enormous","ancient","fragile"],"Ephemeral things last a very short time."],
 [5,"Lax is to strict as lenient is to …",["harsh","gentle","kind","tired"],"Each pair is opposites; lenient is the opposite of harsh."]];
-const LOG=[
+const LOG0=[
 [1,"All cats are animals. Tom is a cat. Therefore Tom is …",["an animal","a dog","not an animal","a bird"],"If all cats are animals, Tom is an animal."],
 [1,"Which does not belong: Apple, Banana, Carrot, Grape?",["Carrot","Apple","Banana","Grape"],"Carrot is a vegetable; the rest are fruit."],
 [2,"Sam is taller than Ben. Ben is taller than Lee. Who is shortest?",["Lee","Ben","Sam","Cannot tell"],"Sam > Ben > Lee."],
@@ -94,11 +135,17 @@ const LOG=[
 [4,"A father is 3 times as old as his son. In 12 years he will be twice as old. How old is the son now?",["12","6","9","15"],"3s + 12 = 2(s + 12), so s = 12."],
 [5,"Anna: “Ben is lying.” Ben: “Cara is lying.” Cara: “Anna and Ben are both lying.” Who is telling the truth?",["Only Ben","Only Anna","Only Cara","All three"],"If Anna were truthful, Cara would be too, which contradicts Cara’s claim. So Anna lies, Ben is truthful, Cara lies."],
 [5,"A clock gains 5 minutes every hour and is set right at noon. What does it show when the true time is 6 pm?",["6:30 pm","6:05 pm","6:25 pm","6:35 pm"],"6 hours × 5 minutes = 30 minutes gained."]];
-function stat(bank,d,l,u){const x=pk(bank.filter(b=>b[0]==l&&!u.has(b[1])));u.add(x[1]);const c=x[2][0],o=sh(x[2]);return{d,l,q:x[1],o,a:o.indexOf(c),e:x[3]}}
-function build(c){const q=[],u=new Set();c.lv.forEach(l=>q.push(genNum(l),stat(VER,1,l,u),stat(LOG,2,l,u),genPat(l)));return q}
+const VERN=[[1,'Which word means the opposite of “happy”?',['sad','glad','funny','loud'],'Happy and sad are opposites.','0'],[1,'A puppy is a baby dog. A kitten is a baby …',['cat','bird','fish','cow'],'A kitten is a baby cat.','0'],[1,'Which word goes with “bird”?',['fly','swim','crawl','roar'],'Birds fly.','0'],[2,'Day is to sun as night is to …',['moon','sleep','dark','bed'],'The sun shows in the day, the moon at night.','01'],[2,'Which word means the same as “tiny”?',['small','huge','tall','fast'],'Tiny means very small.','0'],[2,'Shoe is to foot as hat is to …',['head','hand','hair','coat'],'A shoe goes on the foot, a hat on the head.','01'],[2,'Which word does not belong: dog, cat, cow, chair?',['chair','dog','cat','cow'],'A chair is not an animal.','0'],[3,'Fish is to water as bird is to …',['air','nest','tree','egg'],'Fish move through water, birds through air.','01'],[3,'Which word means the opposite of “brave”?',['scared','strong','kind','quick'],'Brave means not afraid; scared is the opposite.','01'],[2,'Which word means the same as “huge”?',['enormous','narrow','quiet','soft'],'Huge and enormous both mean very big.','1'],[3,'Pen is to writer as brush is to …',['painter','paint','canvas','color'],'A tool and the person who uses it.','1'],[3,'Which word means the opposite of “ancient”?',['modern','old','dusty','famous'],'Ancient means very old; modern is the opposite.','1'],[3,'Library is to books as museum is to …',['artifacts','tickets','guides','walls'],'A place and what it keeps.','1'],[4,'“Reluctant” most nearly means …',['unwilling','eager','tired','angry'],'Reluctant means not wanting to do something.','1'],[4,'Cub is to bear as calf is to …',['cow','bull','horse','goat'],'A cub is a young bear; a calf is a young cow.','1'],[4,'Which word is the opposite of “generous”?',['selfish','kind','wealthy','polite'],'Generous people give freely; selfish is the opposite.','1'],[1,'Which word means the same as “begin”?',['start','finish','wait','stop'],'Start and begin are synonyms.','2'],[2,'Which word is the opposite of “expand”?',['shrink','grow','stretch','open'],'Expand means to grow larger.','2'],[3,'Thermometer is to temperature as ruler is to …',['length','wood','measure','line'],'An instrument and what it measures.','2'],[3,'“Meticulous” most nearly means …',['careful','clumsy','quick','loud'],'Meticulous means very careful about details.','2'],[4,'Verbose is to concise as lavish is to …',['frugal','generous','rich','plain'],'Each pair is opposites: lavish and frugal.','2'],[4,'“Pragmatic” most nearly means …',['practical','dreamy','stubborn','friendly'],'Pragmatic means focused on what works in practice.','2'],[5,'“Obsequious” most nearly means …',['overly eager to please','rude','wise','lazy'],'Obsequious describes fawning, servile behavior.','2'],[5,'Cacophony is to harmony as chaos is to …',['order','noise','music','fear'],'Cacophony is the opposite of harmony; chaos of order.','2']],
+LOGN=[[1,'Tom has 3 apples and gets 2 more. How many does he have?',['5','4','6','1'],'3 + 2 = 5.','0'],[1,'Which is the odd one out: red, blue, green, table?',['table','red','blue','green'],'The others are colors.','0'],[1,'What comes next: Monday, Tuesday, Wednesday, …',['Thursday','Friday','Sunday','Monday'],'Days follow in order.','0'],[2,'A cat has 4 legs. How many legs do 3 cats have?',['12','7','9','8'],'3 × 4 = 12.','0'],[2,'Mia is older than Leo. Leo is older than Sam. Who is the youngest?',['Sam','Leo','Mia','Cannot tell'],'Mia > Leo > Sam.','0'],[2,'All dogs bark and Rex is a dog. So Rex …',['barks','flies','is a cat','is a bird'],'All dogs bark, so Rex barks.','0'],[3,'There are 10 sweets. You eat 3 and give 4 away. How many are left?',['3','7','6','4'],'10 − 3 − 4 = 3.','01'],[3,'A train leaves at 2 o’clock and the trip takes 3 hours. When does it arrive?',['5 o’clock','6 o’clock','4 o’clock','1 o’clock'],'2 + 3 = 5.','01'],[2,'Which is the odd one out: 12, 18, 24, 25, 30?',['25','12','18','30'],'The others are multiples of 6.','1'],[3,'A bag has 5 red and 3 blue marbles. Which color are you more likely to pick?',['red','blue','equally likely','green'],'There are more red marbles.','1'],[3,'If today is Wednesday, what day will it be in 10 days?',['Saturday','Friday','Sunday','Monday'],'10 days is 1 week and 3 days; Wednesday + 3 = Saturday.','1'],[4,'Five friends share 40 stickers equally. Then 3 more friends join and all 8 share the 40 stickers equally. How many does each get?',['5','8','10','4'],'40 ÷ 8 = 5.','1'],[4,'All squares are rectangles. Some rectangles are red. Which must be true?',['All squares are rectangles','All rectangles are squares','Some squares are red','No squares are red'],'Only the first statement is guaranteed.','1'],[4,'A rope is cut into 4 equal pieces of 15 cm each. How long was the rope?',['60 cm','45 cm','19 cm','30 cm'],'4 × 15 = 60.','1'],[1,'Which does not belong: Monday, Friday, July, Sunday?',['July','Monday','Friday','Sunday'],'July is a month; the others are days.','2'],[2,'A shirt costs $20 and is 25% off. What is the sale price?',['$15','$5','$18','$10'],'25% of 20 is 5, and 20 − 5 = 15.','2'],[3,'If 5 machines make 5 items in 5 minutes, how long do 100 machines take to make 100 items?',['5 minutes','100 minutes','20 minutes','1 minute'],'Each machine makes one item in 5 minutes.','2'],[4,'Two trains 300 km apart travel toward each other at 60 and 40 km/h. When do they meet?',['3 hours','5 hours','2 hours','4 hours'],'Closing speed is 100 km/h; 300 ÷ 100 = 3.','2'],[5,'In a race you pass the person in second place. What place are you in?',['Second','First','Third','Cannot tell'],'You take second place, not first.','2'],[5,'A lily patch doubles in size each day and covers the lake on day 30. On which day did it cover half the lake?',['Day 29','Day 15','Day 28','Day 25'],'It doubles daily, so half the lake is one day earlier.','2']];
+const tg=x=>[...x,x[0]<2?'012':x[0]<4?'12':'2'],VER=VER0.map(tg).concat(VERN),LOG=LOG0.map(tg).concat(LOGN);
+let SEEN=new Set();try{SEEN=new Set(JSON.parse(localStorage.getItem('bg_s')||'[]'))}catch(e){}
+function stat(bank,d,l,u,t){let p=bank.filter(b=>b[0]==l&&b[4].includes(t)&&!u.has(b[1]));if(!p.length)p=bank.filter(b=>b[0]==l&&!u.has(b[1]));const f=p.filter(b=>!SEEN.has(b[1])),x=pk(f.length?f:p);u.add(x[1]);SEEN.add(x[1]);const c=x[2][0],o=sh(x[2]);return{d,l,q:x[1],o,a:o.indexOf(c),e:x[3]}}
+function build(c){const t=AG<1?0:AG==1?1:2,q=[],u=new Set(),g=(f,l)=>{let x,i=0;do{x=f(l,t)}while(u.has(x.v)&&i++<9);u.add(x.v);return x};
+c.lv.forEach(l=>q.push(g(genNum,l),stat(VER,1,l,u,t),stat(LOG,2,l,u,t),g(genPat,l)));
+try{localStorage.setItem('bg_s',JSON.stringify([...SEEN].slice(-250)))}catch(e){}return q}
 /* Flow */
 function intro(){const h=hist();$("#app").innerHTML=`<h1>BrainGauge</h1><p>A 20-question reasoning test across numbers, words, logic and patterns. It gets harder as you go.</p>
-<div class=card><b>Choose your age group</b><div class=opts id=ages style="grid-template-columns:1fr 1fr 1fr;margin:10px 0">${AGES.map((a,k)=>`<button class="opt${k==AG?" sel":""}" data-g=${k}>${a.n}</button>`).join("")}</div><b>20 questions · ${AG<0?"20–30":AGES[AG].t/60} minutes</b><p class=mu>Questions and scoring are matched to the age group. You can go back, flag questions and change answers until you submit. Skipped questions count as wrong.</p></div>
+<div class=card><b>Choose your age group</b><div class=opts id=ages style="grid-template-columns:1fr 1fr 1fr;margin:10px 0">${AGES.map((a,k)=>`<button class="opt${k==AG?" sel":""}" data-g=${k}>${a.n}</button>`).join("")}</div><b>20 questions · ${AG<0?"20–30":AGES[AG].t/60} minutes</b><p class=mu>Questions and scoring are matched to the age group, and fresh questions are picked each time. You can go back, flag questions and change answers until you submit. Skipped questions count as wrong.</p></div>
 <button class=btn id=go ${AG<0?"disabled":""}>Start test</button>
 ${h.length?`<div class=card><b>Your past scores</b><p class=mu>${h.slice().reverse().map(x=>x.iq+" (age "+(x.a||"?")+")").join(" · ")}</p></div>`:""}
 <p><small>This is an estimate for fun and practice, not a clinical or professionally administered IQ test. Scores are saved only in this browser.</small></p>`;
